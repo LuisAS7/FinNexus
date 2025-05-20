@@ -23,10 +23,8 @@ public class InscribirClienteEnCurso implements ProcedimientoAlmacenado{
         this.cursoID = cursoID;
         this.fechaInscripcion = fechaInscripcion;
     }
-    
     @Override
-    public void ejecutar() {
-   
+    public void ejecutar() { 
         try {
             Connection conexion = ConexionBD.getInstancia().getConexion();
             try (CallableStatement stmt = conexion.prepareCall("{call InscribirClienteEnCurso(?, ?, ?)}")) {
@@ -50,15 +48,12 @@ public class InscribirClienteEnCurso implements ProcedimientoAlmacenado{
             System.out.println("❌ Error al ejecutar el procedimiento: " + e.getMessage());
         }
     }
-
     @Override
-    public ProcedimientoAlmacenado clonar() {
-    
+    public ProcedimientoAlmacenado clonar() {   
         try {
             return (ProcedimientoAlmacenado) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("No se pudo clonar el procedimiento");
         }
-    }
-    
+    }  
 }
