@@ -13,18 +13,9 @@ import java.util.List;
 
 public class FacadeVerPrestamo {
  public List<VerPrestamosCliente.Prestamo> verPrestamosPorCliente(String dni) {
-        ProcedimientoAlmacenado procedimiento = ProcedimientoFactory.obtener("VerPrestamosCliente");
-
-        if (procedimiento instanceof VerPrestamosCliente) {
-            VerPrestamosCliente verPrestamos = (VerPrestamosCliente) procedimiento;
-            // Asignamos el DNI
-            verPrestamos = new VerPrestamosCliente(dni);
-            String mensaje = verPrestamos.ejecutar(); // Ejecuta el procedimiento
-            System.out.println(mensaje);
-            return verPrestamos.getPrestamos(); // Retorna la lista
-        }
-
-        System.out.println("❌ No se pudo ejecutar el procedimiento VerPrestamosCliente.");
-        return Collections.emptyList(); // Retorna una lista vacía si falla
-    }   
+        VerPrestamosCliente procedimiento = new VerPrestamosCliente(dni);
+        String mensaje = procedimiento.ejecutar();
+        System.out.println(mensaje);
+        return procedimiento.getPrestamos();
+    }
 }

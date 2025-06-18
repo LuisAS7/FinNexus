@@ -13,7 +13,7 @@ import java.sql.Connection;
  *
  * @author Asus
  */
-public class SolicitudPrestamo implements ProcedimientoAlmacenado {
+public class SolicitudPrestamo implements ProcedimientoAlmacenado, Cloneable {
 
     private String dni;
     private double monto;
@@ -22,13 +22,26 @@ public class SolicitudPrestamo implements ProcedimientoAlmacenado {
     private int plazomeses;
     private String ocupacion;
     
-    public SolicitudPrestamo(String dni, double monto, Date fechaSolicitud, String estado, int plazomeses, String ocupacion) {
+    public SolicitudPrestamo() {
+    /* sin argumentos; imprescindible para la Factory */
+}
+    
+    public SolicitudPrestamo(String dni, double monto, Date fechaSolicitud,  int plazomeses, String ocupacion) {
     this.dni = dni;
     this.monto = monto;
     this.fechaSolicitud = fechaSolicitud;
     this.estado = "Pendiente"; // Estado por defecto
     this.plazomeses = plazomeses;
     this.ocupacion = ocupacion;
+}
+    
+public void cargar(String dni, double monto, Date fecha, int plazos, String ocupacion) {
+    this.dni = dni;
+    this.monto = monto;
+    this.fechaSolicitud = fecha;
+    this.plazomeses = plazos;
+    this.ocupacion = ocupacion;
+    this.estado = "Pendiente";
 }
     
     @Override

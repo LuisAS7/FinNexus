@@ -9,86 +9,31 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import Modelo.Procedimientos.ModeloUsuario;
+import Modelo.Usuario;
 
-public class AccesoProxy {
-    private String rolUsuario;
+public class AccesoProxy implements IAccesoSistema {
+    private final ModeloUsuario modelo;
 
-    public AccesoProxy(String rolUsuario) {
-        this.rolUsuario = rolUsuario;
+    public AccesoProxy(ModeloUsuario modelo) {
+        this.modelo = modelo;
     }
 
-    public JMenuBar crearMenuPersonalizado() {
-        JMenuBar barra = new JMenuBar();
+    @Override
+    public Usuario login(String email, String contrasena, String tipoSeleccionado) {
+        Usuario usuario = modelo.login(email, contrasena);
 
-        // Capacitacion - solo Admin o Empleado
-        JMenu capacitacionMenu = new JMenu("Capacitación");
-
-        JMenuItem mostrarCursos = new JMenuItem("Mostrar Cursos");
-        mostrarCursos.addActionListener(e -> {
-            if (tieneAcceso("Admin", "Empleado")) {
-                // acción real
-                JOptionPane.showMessageDialog(null, "Mostrando cursos disponibles...");
-            } else {
-                accesoDenegado();
-            }
-        });
-
-        JMenuItem inscribirCliente = new JMenuItem("Inscribir Cliente");
-        inscribirCliente.addActionListener(e -> {
-            if (tieneAcceso("Admin", "Empleado")) {
-                JOptionPane.showMessageDialog(null, "Inscribiendo cliente...");
-            } else {
-                accesoDenegado();
-            }
-        });
-
-        capacitacionMenu.add(mostrarCursos);
-        capacitacionMenu.add(inscribirCliente);
-
-        if (tieneAcceso("Admin", "Empleado")) {
-            barra.add(capacitacionMenu);
+        if (usuario == null) {
+            return null; // Credenciales inválidas
         }
 
-        // Seguimiento - solo Admin
-        JMenu seguimientoMenu = new JMenu("Seguimiento");
-
-        JMenuItem generarReporte = new JMenuItem("Generar Reporte");
-        generarReporte.addActionListener(e -> {
-            if (tieneAcceso("Admin")) {
-                JOptionPane.showMessageDialog(null, "Generando reporte...");
-            } else {
-                accesoDenegado();
-            }
-        });
-
-        seguimientoMenu.add(generarReporte);
-
-        if (tieneAcceso("Admin")) {
-            barra.add(seguimientoMenu);
+        if (tipoSeleccionado.equalsIgnoreCase("Cliente") && usuario.getRol().equalsIgnoreCase("Cliente")) {
+            return usuario;
+        } else if (tipoSeleccionado.equalsIgnoreCase("Empleado") &&
+                   (usuario.getRol().equalsIgnoreCase("Empleado") || usuario.getRol().equalsIgnoreCase("Admin"))) {
+            return usuario;
         }
 
-        // Cliente - todos lo ven
-        JMenu clienteMenu = new JMenu("Cursos");
-        JMenuItem verCursos = new JMenuItem("Ver Cursos Disponibles");
-        verCursos.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Cursos abiertos para visualización.");
-        });
-        clienteMenu.add(verCursos);
-        barra.add(clienteMenu);
-
-        return barra;
-    }
-
-    private boolean tieneAcceso(String... rolesPermitidos) {
-        for (String rol : rolesPermitidos) {
-            if (rolUsuario.equalsIgnoreCase(rol)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void accesoDenegado() {
-        JOptionPane.showMessageDialog(null, "Acceso denegado. No tienes permisos para esta acción.");
+        return null; // Intentó entrar como tipo incorrecto
     }
 }

@@ -22,7 +22,6 @@ import javax.swing.JPanel;
  */
 public class Capacitacion extends javax.swing.JFrame {
     
-    
     private JPanel contenedorPaneles;
     private CardLayout cardLayout;
     private String panelActual = "mostrar";
@@ -30,7 +29,7 @@ public class Capacitacion extends javax.swing.JFrame {
     public Capacitacion() {
         initComponents();
         
-        JMenuBar menu = MenuPersonalizado.crearMenuBar("Inivitado"); 
+        JMenuBar menu = MenuPersonalizado.crearMenuBar("Admin"); 
         setJMenuBar(menu);
 
         cardLayout = new CardLayout();
@@ -83,17 +82,16 @@ public class Capacitacion extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(244, 244, 244)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(272, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addGap(224, 224, 224))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(461, Short.MAX_VALUE))
+                .addGap(0, 467, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(153, 204, 255));
@@ -199,6 +197,7 @@ public class Capacitacion extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Capacitacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

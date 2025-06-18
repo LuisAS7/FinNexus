@@ -8,6 +8,8 @@ import Controlador.FacadeSolicitudPrestamo;
 import Controlador.ProcedimientoFactory;
 import Modelo.Procedimientos.SolicitudPrestamo;
 import PresonalizacionVista.MenuPersonalizado;
+import PresonalizacionVista.PrestamoObservable;
+import PresonalizacionVista.PrestamoObserver;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.Icon;
@@ -15,13 +17,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import vista.PRESTAMO_RFINAL;
+import Vista.PRESTAMO_RFINAL;
 
 /**
  *
  * @author Asus
  */
-public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
+public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame implements PrestamoObserver {
 
     private String dni;
     private double monto;
@@ -34,7 +36,13 @@ public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
         this.dni = dni;
         this.monto = monto;
         
-        JMenuBar menu = MenuPersonalizado.crearMenuBar("Inivitado"); 
+        if (ProcedimientoFactory.obtener("SolicitudPrestamo") == null) {
+        ProcedimientoFactory.registrar("SolicitudPrestamo", new SolicitudPrestamo());
+    }
+        
+        PrestamoObservable.agregarObservador(this);
+        
+        JMenuBar menu = MenuPersonalizado.crearMenuBar("Admin"); 
         setJMenuBar(menu);
         
         JTXTMontoPaso2.setText(String.valueOf(monto));
@@ -49,8 +57,11 @@ public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
 
    
     
-     private Icon getIcono(String ruta){
-        return new ImageIcon(new ImageIcon(getClass().getResource(ruta)).getImage().getScaledInstance(30, 30, 0));
+     @Override
+    public void actualizarVista(String pasoActual) {
+        if (!"Paso2".equals(pasoActual)) {
+            dispose(); // Cierra si no es su paso
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -252,6 +263,7 @@ public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String ocupacion = JCBOcupacion.getSelectedItem().toString(); // Ocupación
     String plazoTexto = JBCMeses.getSelectedItem().toString().trim(); // Plazo en meses (como texto)
@@ -290,12 +302,13 @@ public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void JBsiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBsiguienteActionPerformed
-        dni = this.dni; // o una variable interna que ya tengas
 
     if (dni != null && !dni.isEmpty()) {
         PRESTAMO_RFINAL verCliente = new PRESTAMO_RFINAL();
         verCliente.setdatoscliente(dni);
         verCliente.setVisible(true);
+        verCliente.setLocationRelativeTo(this); // Centrar si deseas
+        PrestamoObservable.notificar("Paso3");
         this.dispose(); // Cerramos este formulario
     } else {
         JOptionPane.showMessageDialog(this, "DNI no disponible.");
@@ -328,6 +341,8 @@ public class PRESTAMO_RAPIDO1 extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PRESTAMO_RAPIDO1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

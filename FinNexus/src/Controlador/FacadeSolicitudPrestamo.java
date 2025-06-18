@@ -13,13 +13,8 @@ public class FacadeSolicitudPrestamo {
     public String registrarSolicitudPrestamo(String dni, double monto, Date fechaSolicitud, int plazomeses, String ocupacion) {
     ProcedimientoAlmacenado procedimiento = ProcedimientoFactory.obtener("SolicitudPrestamo");
 
-    if (procedimiento instanceof SolicitudPrestamo) {
-        SolicitudPrestamo solicitud = (SolicitudPrestamo) procedimiento;
-        solicitud.setDni(dni);
-        solicitud.setMonto(monto);
-        solicitud.setFechaSolicitud(fechaSolicitud);
-        solicitud.setPlazomeses(plazomeses);
-        solicitud.setOcupacion(ocupacion);
+    if (procedimiento instanceof SolicitudPrestamo solicitud) {
+        solicitud.cargar(dni, monto, fechaSolicitud, plazomeses, ocupacion);
 
         return solicitud.ejecutar();
     }

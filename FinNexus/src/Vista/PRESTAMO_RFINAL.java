@@ -2,10 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package vista;
+package Vista;
 
+import Controlador.FacadeVerPrestamo;
+import Controlador.ProcedimientoFactory;
 import Modelo.Procedimientos.VerPrestamosCliente;
 import PresonalizacionVista.MenuPersonalizado;
+import PresonalizacionVista.PrestamoObservable;
+import PresonalizacionVista.PrestamoObserver;
 import Vista.PRESTAMO_RAPIDO;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -20,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Asus
  */
-public class PRESTAMO_RFINAL extends javax.swing.JFrame {
+public class PRESTAMO_RFINAL extends javax.swing.JFrame implements PrestamoObserver {
  
     private String dniCliente;
     /*
@@ -28,6 +32,8 @@ public class PRESTAMO_RFINAL extends javax.swing.JFrame {
      */
     public PRESTAMO_RFINAL() {
         initComponents();
+        PrestamoObservable.agregarObservador(this);
+
         
         this.dniCliente = dniCliente;
         
@@ -35,16 +41,23 @@ public class PRESTAMO_RFINAL extends javax.swing.JFrame {
         setJMenuBar(menu);
         
        JBAceptar.setEnabled(false);
-        llenarTablaPrestamos(dniCliente);
+       
+    }
+    
+    @Override
+    public void actualizarVista(String pasoActual) {
+        if (!"Paso3".equals(pasoActual)) {
+            dispose(); // Cierra si no es su paso
+        }
     }
     
     public void setdatoscliente(String dniCliente){
         this.dniCliente = dniCliente;
+        llenarTablaPrestamos(dniCliente); 
     }
     private void llenarTablaPrestamos(String dni) {
-    VerPrestamosCliente procedimiento = new VerPrestamosCliente(dni);
-    procedimiento.ejecutar();
-    List<VerPrestamosCliente.Prestamo> lista = procedimiento.getPrestamos();
+    FacadeVerPrestamo facade = new FacadeVerPrestamo();
+    List<VerPrestamosCliente.Prestamo> lista = facade.verPrestamosPorCliente(dni);
 
     DefaultTableModel modelo = new DefaultTableModel();
     modelo.setColumnIdentifiers(new String[]{"Fecha", "Monto", "Plazo", "Estado"});
@@ -54,9 +67,6 @@ public class PRESTAMO_RFINAL extends javax.swing.JFrame {
     }
 
     TDatos.setModel(modelo);
-}
-    private Icon getIcono(String ruta){
-        return new ImageIcon(new ImageIcon(getClass().getResource(ruta)).getImage().getScaledInstance(30, 30, 0));
     }
 
     
